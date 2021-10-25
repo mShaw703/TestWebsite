@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Walkthrough: Library and Barcode Project Analysis</title>
+
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">GTP Bioinformatics</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="bioinformatics_basics.html">Bioinformatics Basics</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Pipeline Walkthrough's
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="WT_BarcodeLibrary_MS08Oct2021.html">Walkthrough: Library/Barcode Projects</a>
+    </li>
+    <li>
+      <a href="BarcodeBatchforLibraryProjects_MS16July2021.html">How to Run: Library/Barcode Projects</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Guides
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Archiving_Guide_26Mar2020.html">How to: Archive</a>
+    </li>
+    <li>
+      <a href="ConcatenatingGuide.html">How to: Concatenate</a>
+    </li>
+    <li>
+      <a href="CellRanger_Count.html">CellRanger - Count</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Walkthrough: Library and Barcode Project Analysis</h1>
+
+</div>
+
+
+<div id="introduction" class="section level3">
+<h3>Introduction</h3>
+<p>In the Library Analysis Pipeline, we use paired-end, short read sequencing and trade traditional alignment, for a method where we remove the identical regions surrounding a small variable region and tally the unique occurrences of the <span style="color:firebrick"><strong>region of interest</strong></span>. After identifying and extracting the ROI, you can discover hits by calculating enrichment and characterizing the represented sequences.</p>
+<div class="figure">
+<img src="images/librarypool.svg" alt="" />
+<p class="caption">In a library or barcode study, all paired reads should have an identical structure.</p>
+</div>
+<hr />
+</div>
+<div id="input" class="section level3">
+<h3><strong>Input</strong></h3>
+<p>Rather than a map, the analysis requires the expected identity of the regions flanking the sequence of interest. With the ROI in the center, the “adapters” and ROI should make up the entire length of the amplicon.</p>
+<div class="figure">
+<img src="images/libraryamplicon.svg" alt="" />
+<p class="caption">The 5’ and 3’ “Adapters” should be nearly identical across all reads. These adapters will be trimmed so that we can extract the unique library members.</p>
+</div>
+<hr />
+</div>
+<div id="step-1-join-paired-end-reads" class="section level3">
+<h3><strong>Step 1:</strong> Join paired-end reads</h3>
+<div class="figure">
+<img src="images/libraryR1R2.svg" alt="" />
+<p class="caption">When using paired end reads, there should be a few bases of overlapping region that can be used to properly align reads.</p>
+</div>
+<p>In traditional alignment, paired end reads are joined by the mapping software during the alignment process. Here we must join the paired reads using <strong>fastq-join</strong> a software specific to joining reads without alignment. To read more about <strong>fastq-join</strong> please see their <a href="https://github.com/brwnj/fastq-join">github</a>.</p>
+<div id="parameters-used" class="section level4">
+<h4><strong>Parameters Used:</strong></h4>
+<p><span style="color:Purple"><strong>-p 10</strong></span> - the overlapping region can not exceed <span style="color:Purple"><strong>10%</strong></span> difference in similarity</p>
+<hr />
+</div>
+</div>
+<div id="step-2-take-the-reverse-compliment-and-concatenate-to-foward-joined-reads" class="section level3">
+<h3><strong>Step 2:</strong> Take the reverse compliment and concatenate to foward joined reads</h3>
+<p>Using the tool <span style="color:Purple"><strong>fastx_reverse_compliment</strong></span> from <span style="color:Purple"><strong>FASTX_toolkit</strong></span>, the joined reads are reversed and reverse reads are added to the end of the reads list in the joined fastq file. The purpose of this is to ensure that ampljcons that were accidently reversed in seqeuncing included in the final library counts. For more information on <span style="color:Purple"><strong>fastx_reverse_compliment</strong></span>, see the <span style="color:Purple"><strong>FASTX_toolkit</strong></span> <a href="http://hannonlab.cshl.edu/fastx_toolkit/commandline.html#fastx_revcomp_usage">webpage</a></p>
+<p><strong>NOTE:</strong> This step should double your joined reads file size. Reads already in the correct orientation will not be double counted from this step.</p>
+</div>
+<div id="foward-and-reverse-orientation-of-the-reads-are-put-into-a-single-file." class="section level2">
+<h2><img src="images/libraryforwardreverse.svg" alt="Foward and reverse orientation of the reads are put into a single file." /></h2>
+<div id="step-3-trim-adapters" class="section level3">
+<h3><strong>Step 3:</strong> Trim “adapters”</h3>
+<p><strong>Cutadapt</strong> is a tool used to <em>“find and remove adapter sequences, primers, poly-A tails and other types of unwanted sequence from your high-throughput sequencing reads”</em>. Here the flanking sequences we call “adapters”, aren’t adapters by the standard definition. We call them “adapters” to indicate that they are unwanted sequences and should be trimmed before analysis.</p>
+<p>The expected identity of the sequences are used to mark what should be trimmed and unmatched reads are discarded. The trimming of adapters is error tolerant, allowing for mismatch between the expected adapters and actual reads. The 3’ adapter is trimmed first, followed by the 5’ leaving only the region of interest in a fastq format.</p>
+<div class="figure">
+<img src="images/librarytrimming.svg" alt="" />
+<p class="caption">The 3’ adapter is trimmed first, followed by the 5’ leaving only the region of interest in a fastq format.</p>
+</div>
+<div id="parameters-used-1" class="section level4">
+<h4><strong>Parameters Used:</strong></h4>
+<ul>
+<li><span style="color:Purple"><strong>-a / -g</strong></span> - specifies 3’ or 5’regular adapters </br></li>
+<li><span style="color:Purple"><strong>-m 6</strong></span> - minimum length, set during the 5’ adapter trimming step, any read under the specified <span style="color:Purple"><strong>length 6</strong></span> will be discarded. </br></li>
+<li><span style="color:Purple"><strong>Default Maximum Error Rate</strong></span> - though not specified, the maximum error rate can not exceed <span style="color:Purple"><strong>10%</strong></span></li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="step-4-quality-trim-and-tally-sequences" class="section level3">
+<h3><strong>Step 4:</strong> Quality trim and tally sequences</h3>
+<p>ROI reads are then filtered for quality using <span style="color:Purple"><strong>fastq_quality_filter</strong></span> and converted to fasta format using <span style="color:Purple"><strong>fastq_to_fasta</strong></span>, both tools also come from <span style="color:Purple"><strong>FASTX_toolkit</strong></span>. A basic R script is run to tally unique library sequences and a tab-separated file is produced with the sequence in the first column and number of occurrences in the second.</p>
+<p><img src="images/libraryqualityfilter.svg" /> #### <strong>Parameters Used:</strong></p>
+<ul>
+<li><span style="color:Purple"><strong>-q 20</strong></span> - phred based quality score of 20 </br></li>
+<li><span style="color:Purple"><strong>-p 100</strong></span> - percent of bases that must meet phred quality score minimum is <span style="color:Purple"><strong>100%</strong></li>
+</ul>
+<hr />
+</div>
+<div id="pre-downstream-analysis-steps-translating-seqeunces-normalizing-counts-to-reads-per-million-and-optional-filters" class="section level3">
+<h3><strong>Pre-Downstream Analysis Steps:</strong> Translating seqeunces, normalizing counts to reads per million, and optional filters**</h3>
+<p>Once the main pipeline is complete, the next steps are flexible based on what the project requires. Most projects will included translation of the nucleic acid sequences to peptide sequences, normalizing reads by rpm, and a few optional library filters including filters by length, stop codon removal, oligo lists, cheater sequences, and more.</p>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

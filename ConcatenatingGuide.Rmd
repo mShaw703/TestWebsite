@@ -1,0 +1,130 @@
+---
+title: "Concatenization Guide"
+author: "Maggie Shaw"
+date: "7/16/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## How to concatenate raw data files 
+#### fastqs, sam, bam, and tab seperated
+
+`cat` is a bash command used to view the contents of files. There are several ways to use `cat` but most importantly you can use it to combine the contents of raw data files. 
+
+
+### Basic use
+For basic use of `cat`, print the command followed by the name / path of your file. Please keep in mind that this should not be done on large files. 
+
+```{}
+cat myfile.txt
+```
+
+For two or more files in a row  ..
+```{}
+cat myfile1.txt myfile2.txt
+```
+
+For all files in your current directory ..
+```{}
+cat *
+```
+
+### Creating a new file with `cat`
+To write a new file with the exact contents of the original ..
+```{}
+cat myfile.txt > mynewfile.txt
+```
+
+To write a new file with the exact contents of multiple files ..
+```{}
+cat myfile1.txt myfile2.txt > mynewfile.txt
+```
+This will print the contents of your 2 files in order in the new file. </br>
+</br>
+
+To write only files with a specific ending in a directory to a new file ..
+```{}
+cat *fastq > menew.fastq
+```
+
+
+### Consolidating Fastqs
+
+To combine fastqs from multiple projects, first figure out which files belong together. To combine multple runs for a single sample be sure to only combine Read 1's with Read 1's, Read 2's with Read 2's, and so on. 
+There are a few ways you can easliy concatenate your runs.
+
+**IMPORTANT NOTE 1** - When naming your new fastq, try to keep the end of the file name consistant with what comes off the seqeuncer. This will avoid any issues you may run into in our codes that look for a specific file ending. **_001.fastq.gz**
+</br>
+
+**IMPORTANT NOTE 2** - As long as all files are compressed (or not compressed) using the same method. Cat can be used without any additional steps. 
+</br>
+
+#### **Method 1 :** Only a few samples
+
+To manually concatenate without moving fastqs, use the full path of each fastq and specify Read 1, Read 2, etc.
+```{}
+cat /project/gtplab/GTP_VC_NAT_NGS/B500/fastqs/B500-01*R1*fastq.gz  /project/gtplab/GTP_VC_NAT_NGS/B501/fastqs/B501-01*R1*fastq.gz /project/gtplab/GTP_VC_NAT_NGS/B501/fastqs/B502-01*R1*fastq.gz > menewB500-B501-B502_R1_001.fastq.gz
+```
+Do the same for Read 2 ..
+```{}
+cat /project/gtplab/GTP_VC_NAT_NGS/B500/fastqs/B500-01*R2*fastq.gz  /project/gtplab/GTP_VC_NAT_NGS/B501/fastqs/B501-01*R2*fastq.gz /project/gtplab/GTP_VC_NAT_NGS/B501/fastqs/B502-01*R2*fastq.gz > menewB500-B501-B502_R2_001.fastq.gz
+```
+
+#### **Method 2:** For many samples
+Lets Say your file structure looks kind of like the following (From your directory run command `tree` to see structure) where the fastq names are identical between runs.
+```{}
+B555
+  -fastqs
+    -run1
+    fastqA.fq.gz
+    fastqB.fq.gz
+    fastqC.fq.gz
+    -run2
+    fastqA.fq.gz
+    fastqB.fq.gz
+    fastqC.fq.gz
+```
+
+1. Create a simple file of just the file names  from the fastq directory (ie /project/gtplab/GTP_VC_NAT_NGS/B555/fastqs)
+``` {}
+cat run1 > samples.txt
+```
+This should create a file that looks like this ..
+```{}
+cat samples.txt 
+
+fastqA.fq.gz
+fastqB.fq.gz
+fastqC.fq.gz
+```
+
+2. Create a new directory for your concatenated Files
+```{}
+mkdir concatenated_fq
+```
+
+3. Use this file list to create your Concatenated Files
+```{}
+for line in `cat samples.txt`; do cat run1/$line run2/$line > concatenated_fq/$line; done
+```
+
+This last line will take the name from the sample sheet (line x line) find that name in run1, find that name in run 2, combine them, and create a new files with that
+name in your new `concatenated_fq` directory
+
+</br>
+
+
+#### **Method 3:** For concatenating lanes (If your fastqs for a single run are seperated into lanes, ie. L001, L002, L003, L004)
+Use the following one liner from the directory with your fastqs
+```{} 
+for f in `ls *_L001_R1_001.fastq.gz`; do base=${f//_L001_R1_001.fastq.gz/}; cat $f "${base}_L002_R1_001.fastq.gz" "${base}_L003_R1_001.fastq.gz" "${base}_L004_R1_001.fastq.gz" > "${base}_full_L001_R1_001.fastq.gz"; cat "${base}_L001_R2_001.fastq.gz"   "${base}_L002_R2_001.fastq.gz" "${base}_L003_R2_001.fastq.gz" "${base}_L004_R2_001.fastq.gz" > "${base}_full_L001_R2_001.fastq.gz";echo $base; done
+```
+
+
+This one liner will create a new fastq with the label **"full"** for every sample's R1 and R2. If you also need to run this with Index files (I1, I2), simply replace all "R1"s with "I1" and "R2"s with "I2".
+
+
+

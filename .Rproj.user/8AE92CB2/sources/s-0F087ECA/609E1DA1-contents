@@ -1,0 +1,235 @@
+# Maggie Shaw
+# Start: 20Feb20
+# Last Edit:
+# Library Project: Complex Library Project
+# Adapted from Yuan Yuan's code where she did this analysis on same data set. -- B0012
+# Purpose is to make this usable for additional data or similar analysis
+#------------------------# 
+
+# Required Libraries
+library(dplyr)
+library(tidyr)
+library(tidyverse)
+library(BiocGenerics)
+library(Biostrings)
+
+
+# Step 1: read in files and sample sheet
+#### read in sample sheet
+read.table("C:\\Users\\shawma\\Desktop\\OnGoing_Projects\\ComplexLibrary\\test_data_set\\Sample_Sheet_test.txt", sep = "\t", header = TRUE) -> sample.sheet
+
+
+# First separate by neg / non neg -- analysis is a bit different so this is a good first seperation
+### NOTE: Need to add something to Rd0 that separates them into 2 groups-- so they can be applied to different dfs later HAS TO BE IN TREATMENT COL
+#sample.sheet %>% filter(ROUND == "Rd0") -> Round0 
+#sample.sheet %>% filter(ROUND != "Rd0") -> sample.sheet 
+sample.sheet %>% filter(NEG == TRUE) -> NegGroups
+#tissues <- levels(sample.sheet$TISSUE)
+sample.sheet %>% filter(NEG == FALSE) -> nonNegGroups
+
+# Function to read in files,  remove stop and cys codons, 
+filter.norm <- function(df){
+  all.df = list()
+  for (i in 1:nrow(df)){
+    #### This will filter by length (21 or 39), translate, add "GSG" to either end of the 21 length, 
+    ####  filter out stop and cys, normalize
+    # --------------------------#
+       d <- df[i,]
+       mypath=d$PATH
+       myfullpath=paste0(mypath, d$RAWSAMPLE, d$SID, "_001.final.fasta.count")
+       read.table(myfullpath, sep = "\t", header = TRUE) -> g.df
+       as.data.frame(g.df) -> g.df
+       g.df$group <- d$GROUP
+       g.df$rep <- d$REP
+       g.df %>% rowwise() %>% mutate(group = paste(group,"_", rep)) -> g.df
+       g.df$round <- d$ROUND
+       g.df$d <- as.character(g.df$d)
+       g.df %>% mutate(char = nchar(d)) -> g.df
+       g.df %>% filter(char == 21 | 39) -> g.df
+       
+       
+       freqsum = sum(g.df[,2])
+       # Calculates RPM
+       g.df %>% rowwise() %>% mutate(rpm = (Freq*10^6)/freqsum) -> g.df
+       g.df$Freq <- NULL
+       
+       all.df[[i]] <- g.df
+    }
+  do.call(rbind, all.df) -> all.data
+  # Split into target groups
+  group.dfs <- split(all.data, all.data$group)
+  return(group.dfs)
+}
+
+filter.norm(NegGroups) -> NegGroups.dfs
+
+
+as.data.frame(NegGroups.dfs[1]) -> testdf
+testdf %>% spread(X293._.1.round, X293._.1.rpm) -> testdf
+
+filter.norm(nonNegGroups) -> nonNegGroups.dfs
+AAV %>% spread(AAV.rep, AAV.freq.frac) -> AAV
+
+
+# For now read in round 0 
+read.table("C:\\Users\\shawma\\Desktop\\OnGoing_Projects\\ComplexLibrary\\2911-2912.final.fasta.count", 
+           sep = "\t", header = TRUE) -> round0
+
+# ---- Calculations for Round0 ---- #
+
+round0$d <- as.character(round0$d)
+round0 %>% mutate(char = nchar(d)) -> round0
+round0 %>% filter(char == 21 | 39) -> round0
+freqsum = sum(round0[,2])
+# Calculates RPM
+round0 %>% rowwise() %>% mutate(round0.rpm = (Freq*10^6)/freqsum) -> round0
+round0$Freq <- NULL
+
+
+
+
+
+### FOr non-Neg
+for (i in nonNegGroups.dfs){
+  ### Spread data in nonNegGroups by round
+  ### Take the rd0 frequency and add it to the df
+  ### Order columns to your liking
+  ### Get enrichment from group to group
+  
+}
+
+# For Non-neg -- get FDR 
+
+
+# Step 3: Run Calculations on all Tissues one-by-one
+rpm.dfs = list()
+rpm.dfs.fl = list()
+for (i in 2:length(tissue.dfs)){
+  as.data.frame(tissue.dfs[[i]]) -> df
+  colnames(df) <- c("d", "tissue", "rep", "freq.frac")
+  df %>% spread(rep, freq.frac) -> df
+  df[is.na(df)] <- 0
+  df$freq.mean <- rowMeans(df[,3:ncol(df)]) 
+  df %>% filter(d %in% oligos$seq) -> df
+  merge(df, AAV, by.x = "d", by.y = "AAV.d", all.x=TRUE, all.y=TRUE) -> df
+  df$tissue <- tissues[[i]]
+  df[is.na(df)] <- 0
+  df$peptide <- as.character(translate(DNAStringSet(df$d)))
+  df -> fl.df
+  df %>% select(c("d", "tissue", "freq.mean", "AAV.freq.mean", "peptide")) -> df
+  rpm.dfs.fl[[i]] <- fl.df
+  rpm.dfs[[i]] <- df
+}
+rpm.dfs.fl[[3]] -> test
+write.table(test, "C:\\Users\\shawma\\Desktop\\OnGoing_Projects\\AAV_Evolution\\normalizedbraindata.csv", sep = ",", col.names = TRUE, row.names = FALSE)
+
+# Step4: Significant Peptides -- for each tissue
+for.plots <- list()
+full.stats <- list()
+for (i in 2:length(rpm.dfs.fl)){
+  rpm.dfs.fl[[i]]-> df
+  df %>% mutate(FC = log2((df$freq.mean+1)/(df$AAV.freq.mean+1))) -> df
+  a = (ncol(df) - 13) # Number of replicates, ASSUMING AAv HAS 6
+  b = 2 + a # Enc column of tissue samples
+  c = b + 3 # Starting column of AAV samples
+  df$BC <- rowSums(df[,3:b] > df$AAV.freq.mean)
+  df$Ind <- (df$BC/a) * df$FC * log10(1e6/(df$AAV.freq.mean+1))
+  ## NOTE : Here is a function to either use batch T-test OR Wilcox Non Parametric,
+  #           its an easy switch to just leave one in and comment out the other. 
+  #           Eventually im sure we will probably use just one but I left it in for now
+  
+  #batchT <- function(x) {
+  #  len <- length(x)
+  #  return(t.test(x[1:(len-6)],x[(len-5):len])$p.value)
+  # }
+  #df$pval <- apply(df[,c(3:b,c:(c+5))], 1, batchT)
+  batchW <- function(x) {
+     len <- length(x)
+     return(wilcox.test(x[1:(len-6)],x[(len-5):len])$p.value)
+    }
+  df$pval <- apply(df[,c(3:b,c:(c+5))], 1, batchW)
+ 
+  df$FDR <- p.adjust(df$pval, method = "BH")
+  levels(factor(df$tissue)) -> tissue
+  df %>% select("d","peptide","tissue", "AAV.freq.mean", "freq.mean", "FC", "BC", "Ind", "pval", "FDR") -> df
+  for.plots[[i]] <- df
+  colnames(df) <- c("d","peptide","tissue", "AAV.freq.mean", paste0(tissue, ".freq.mean"), paste0(tissue, ".FC"),
+                    paste0(tissue, ".BC"), paste0(tissue, ".Ind"), paste0(tissue, ".pval"), paste0(tissue, "FDR"))
+  df$tissue <- NULL
+  full.stats[[i]] <- df
+}
+
+
+full.stats[[1]] <- NULL
+full.stats %>% purrr::reduce(left_join, by=c("d", "peptide", "AAV.freq.mean")) -> full.stats.df
+full.stats.df[is.na(full.stats.df)] <- 0
+# Full stats Results
+write.table(full.stats.df, "C:\\Users\\shawma\\Desktop\\OnGoing_Projects\\AAV_Evolution\\Full_Results_ttest_01272019.csv", sep = ",", col.names = TRUE, row.names = FALSE)
+
+
+
+
+
+
+
+# 
+# # --  ON A SAMPLE BY SAMPLE RUN -- #
+# # Step5: RPM v RPM plot
+# # Colors
+# mycols <- colorRamps::primary.colors(n = 20, steps = 3, no.white = TRUE)
+# pdf("C:\\Users\\shawma\\Desktop\\OnGoing_Projects\\AAV_Evolution\\plots\\wilcox_Volcano.pdf")
+# makescatterplot <- function(n, my.FC, my.FDR, tissue){
+#   for.plots[[n]] -> df
+#   df %>% filter(FC >= my.FC & FDR <= my.FDR) -> df2
+#   # Get top peptides
+#   df2[with(df2, order(-FC, FDR)),] -> df2
+#   unique(df2$peptide) -> toppeps
+# 
+# 
+#  plot(df$AAV.freq.mean+1, df$freq.mean+1, log = "xy",xlab = "AAV library (reads per mil)",
+#      ylab = paste0(tissue, "(reads per mil)"), main = tissue, pch = 20, col = "#66666655") +
+#  abline(c(0,1), lty = "dashed", lwd = 2, col = "darkgoldenrod1") 
+#  for(i in 1:length(toppeps)){
+#    test <- df$peptide == toppeps[[i]]
+#    (points(df$AAV.freq.mean[test]+1, df$freq.mean[test]+1, pch = 20, col = mycols[i], cex = 2))
+#    }
+#  legend("topleft", 
+#        legend = toppeps,
+#        text.col = "black",       
+#        col = mycols,
+#        bty = "n", 
+#        pch = 20,
+#        pt.cex = 2, 
+#        cex = 0.7,
+#        horiz = F)
+#  
+#  plot(df$FC, -log10(df$FDR), xlab= "log2 FC", ylab="-log10 pval", main = tissue, 
+#       pch = 20, col = "#66666655", xlim = c(-10, 10), ylim = c(0, 4))
+#  
+#  for(i in 1:length(toppeps)){
+#    test2 <- df$peptide == toppeps[[i]]
+#    (points(df$FC[test2], -log10(df$FDR[test2]), pch = 20, col = mycols[i], cex = 2))
+#  }
+#  legend("topleft", 
+#         legend = toppeps,
+#         text.col = "black",       
+#         col = mycols,
+#         bty = "n", 
+#         pch = 20,
+#         pt.cex = 2, 
+#         cex = 0.7,
+#         horiz = F
+#         }
+#   
+# }
+# 
+# makescatterplot(2, 1, 0.1, "Bicep")
+# makescatterplot(3, 1.5, 0.05, "Brain") 
+# makescatterplot(4, 2, 0.05, "Heart") 
+# makescatterplot(5, 2.5, 0.05, "Liver") 
+# makescatterplot(6, 1, 0.1, "Rectus Femoris") 
+# makescatterplot(7, 1, 0.1, "SpinalC. Cervical") 
+# makescatterplot(8, 1.5, 0.1, "SpinalC. Lumbar") 
+# makescatterplot(9, 1.5, 0.05, "SpinalC. Thoracic") 
+# dev.off()
+

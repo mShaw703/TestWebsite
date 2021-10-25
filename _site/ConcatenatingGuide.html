@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Maggie Shaw" />
+
+
+<title>Concatenization Guide</title>
+
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">My Website</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="bioinformatics_basics.html">Bioinformatics Basics</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Pipeline Walkthrough's
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="WT_BarcodeLibrary_MS08Oct2021.html">Walkthrough: Library/Barcode Projects</a>
+    </li>
+    <li>
+      <a href="BarcodeBatchforLibraryProjects_MS16July2021.html">How to Run: Library/Barcode Projects</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Guides
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Archiving_Guide_26Mar2020.html">How to: Archive</a>
+    </li>
+    <li>
+      <a href="ConcatenatingGuide.html">How to: Concatenate</a>
+    </li>
+    <li>
+      <a href="CellRanger_Count.html">CellRanger - Count</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Concatenization Guide</h1>
+<h4 class="author">Maggie Shaw</h4>
+<h4 class="date">7/16/2021</h4>
+
+</div>
+
+
+<div id="how-to-concatenate-raw-data-files" class="section level2">
+<h2>How to concatenate raw data files</h2>
+<div id="fastqs-sam-bam-and-tab-seperated" class="section level4">
+<h4>fastqs, sam, bam, and tab seperated</h4>
+<p><code>cat</code> is a bash command used to view the contents of files. There are several ways to use <code>cat</code> but most importantly you can use it to combine the contents of raw data files.</p>
+</div>
+<div id="basic-use" class="section level3">
+<h3>Basic use</h3>
+<p>For basic use of <code>cat</code>, print the command followed by the name / path of your file. Please keep in mind that this should not be done on large files.</p>
+<pre><code>cat myfile.txt</code></pre>
+<p>For two or more files in a row ..</p>
+<pre><code>cat myfile1.txt myfile2.txt</code></pre>
+<p>For all files in your current directory ..</p>
+<pre><code>cat *</code></pre>
+</div>
+<div id="creating-a-new-file-with-cat" class="section level3">
+<h3>Creating a new file with <code>cat</code></h3>
+<p>To write a new file with the exact contents of the original ..</p>
+<pre><code>cat myfile.txt &gt; mynewfile.txt</code></pre>
+<p>To write a new file with the exact contents of multiple files ..</p>
+<pre><code>cat myfile1.txt myfile2.txt &gt; mynewfile.txt</code></pre>
+<p>This will print the contents of your 2 files in order in the new file. </br> </br></p>
+<p>To write only files with a specific ending in a directory to a new file ..</p>
+<pre><code>cat *fastq &gt; menew.fastq</code></pre>
+</div>
+<div id="consolidating-fastqs" class="section level3">
+<h3>Consolidating Fastqs</h3>
+<p>To combine fastqs from multiple projects, first figure out which files belong together. To combine multple runs for a single sample be sure to only combine Read 1’s with Read 1’s, Read 2’s with Read 2’s, and so on. There are a few ways you can easliy concatenate your runs.</p>
+<p><strong>IMPORTANT NOTE 1</strong> - When naming your new fastq, try to keep the end of the file name consistant with what comes off the seqeuncer. This will avoid any issues you may run into in our codes that look for a specific file ending. **_001.fastq.gz** </br></p>
+<p><strong>IMPORTANT NOTE 2</strong> - As long as all files are compressed (or not compressed) using the same method. Cat can be used without any additional steps. </br></p>
+<div id="method-1-only-a-few-samples" class="section level4">
+<h4><strong>Method 1 :</strong> Only a few samples</h4>
+<p>To manually concatenate without moving fastqs, use the full path of each fastq and specify Read 1, Read 2, etc.</p>
+<pre><code>cat /project/gtplab/GTP_VC_NAT_NGS/B500/fastqs/B500-01*R1*fastq.gz  /project/gtplab/GTP_VC_NAT_NGS/B501/fastqs/B501-01*R1*fastq.gz /project/gtplab/GTP_VC_NAT_NGS/B501/fastqs/B502-01*R1*fastq.gz &gt; menewB500-B501-B502_R1_001.fastq.gz</code></pre>
+<p>Do the same for Read 2 ..</p>
+<pre><code>cat /project/gtplab/GTP_VC_NAT_NGS/B500/fastqs/B500-01*R2*fastq.gz  /project/gtplab/GTP_VC_NAT_NGS/B501/fastqs/B501-01*R2*fastq.gz /project/gtplab/GTP_VC_NAT_NGS/B501/fastqs/B502-01*R2*fastq.gz &gt; menewB500-B501-B502_R2_001.fastq.gz</code></pre>
+</div>
+<div id="method-2-for-many-samples" class="section level4">
+<h4><strong>Method 2:</strong> For many samples</h4>
+<p>Lets Say your file structure looks kind of like the following (From your directory run command <code>tree</code> to see structure) where the fastq names are identical between runs.</p>
+<pre><code>B555
+  -fastqs
+    -run1
+    fastqA.fq.gz
+    fastqB.fq.gz
+    fastqC.fq.gz
+    -run2
+    fastqA.fq.gz
+    fastqB.fq.gz
+    fastqC.fq.gz</code></pre>
+<ol style="list-style-type: decimal">
+<li>Create a simple file of just the file names from the fastq directory (ie /project/gtplab/GTP_VC_NAT_NGS/B555/fastqs)</li>
+</ol>
+<pre><code>cat run1 &gt; samples.txt</code></pre>
+<p>This should create a file that looks like this ..</p>
+<pre><code>cat samples.txt 
+
+fastqA.fq.gz
+fastqB.fq.gz
+fastqC.fq.gz</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Create a new directory for your concatenated Files</li>
+</ol>
+<pre><code>mkdir concatenated_fq</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Use this file list to create your Concatenated Files</li>
+</ol>
+<pre><code>for line in `cat samples.txt`; do cat run1/$line run2/$line &gt; concatenated_fq/$line; done</code></pre>
+<p>This last line will take the name from the sample sheet (line x line) find that name in run1, find that name in run 2, combine them, and create a new files with that name in your new <code>concatenated_fq</code> directory</p>
+<p></br></p>
+</div>
+<div id="method-3-for-concatenating-lanes-if-your-fastqs-for-a-single-run-are-seperated-into-lanes-ie.-l001-l002-l003-l004" class="section level4">
+<h4><strong>Method 3:</strong> For concatenating lanes (If your fastqs for a single run are seperated into lanes, ie. L001, L002, L003, L004)</h4>
+<p>Use the following one liner from the directory with your fastqs</p>
+<pre><code>for f in `ls *_L001_R1_001.fastq.gz`; do base=${f//_L001_R1_001.fastq.gz/}; cat $f &quot;${base}_L002_R1_001.fastq.gz&quot; &quot;${base}_L003_R1_001.fastq.gz&quot; &quot;${base}_L004_R1_001.fastq.gz&quot; &gt; &quot;${base}_full_L001_R1_001.fastq.gz&quot;; cat &quot;${base}_L001_R2_001.fastq.gz&quot;   &quot;${base}_L002_R2_001.fastq.gz&quot; &quot;${base}_L003_R2_001.fastq.gz&quot; &quot;${base}_L004_R2_001.fastq.gz&quot; &gt; &quot;${base}_full_L001_R2_001.fastq.gz&quot;;echo $base; done</code></pre>
+<p>This one liner will create a new fastq with the label <strong>“full”</strong> for every sample’s R1 and R2. If you also need to run this with Index files (I1, I2), simply replace all “R1”s with “I1” and “R2”s with “I2”.</p>
+</div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,50 @@
+library(stringr)
+library(dplyr)
+library(BiocGenerics)
+library(Biostrings)
+
+## used for B420.B421, B422, B423
+## Basic RPM
+
+read.table("C:\\Users\\shawma\\Desktop\\OnGoing_Projects\\Hao_Library\\SampleSheet.txt") -> samples
+samples$V1 <- as.character(samples$V1)
+samples$V2 <- as.character(samples$V2)
+#samples$V6 <- vapply(strsplit(samples$V2,"_"), `[`, 1, FUN.VALUE=character(1))
+# Not in function
+'%!in%' <- function(x,y)!('%in%'(x,y))
+
+for (f in 1:nrow(samples)){
+  data <- samples[f,]
+  filepath=data$V1
+  samplename=data$V2
+  group=data$V6
+  # Read all data in
+  read.table(filepath, sep = "\t", header = TRUE) -> rawcounts
+  parsedata <- function(df){
+  # --------------------------#
+    df$d <- as.character(df$d)
+    df$peptide <- as.character(translate(DNAStringSet(df$d)))
+    freqsum = sum(df[,2])
+    # Calculates RPM
+    df %>% rowwise() %>% mutate(rpm = (Freq*10^6)/freqsum) -> df
+    df$Freq <- NULL
+    colnames(df) <- c("d","peptide", "rpm")
+    df %>% select(c(d, peptide, rpm)) -> df
+    df %>% group_by(peptide) %>% summarise(rpm = sum(rpm)) -> df
+    df %>% mutate(char = nchar(peptide)) -> df
+    df %>% filter(char == 7) -> df
+    df %>% filter(str_detect(peptide,"\\*")) -> removepeps
+    df %>% filter(peptide %!in% removepeps$peptide) -> df
+    df$char <- NULL
+    
+    
+    return(df)
+  }
+  parsedata(rawcounts) ->df
+  
+  resultspath <- paste0("C:\\Users\\shawma\\Desktop\\OnGoing_Projects\\Hao_Library\\",samplename, ".summarycounts.txt")
+  write.table(df, resultspath, sep = "\t", row.names = FALSE, quote = FALSE)
+}
+
+
+

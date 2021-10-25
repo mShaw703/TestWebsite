@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graphic xmlns="http://ns.adobe.com/fxg/2008" xmlns:fxg="http://ns.adobe.com/fxg/2008" xmlns:d="http://ns.adobe.com/fxg/2008/dt" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:svg="http://www.w3.org/Graphics/SVG/1.1/DTD/svg11-tiny.dtd" version="2.0" viewWidth="2086" viewHeight="457">
+  <mask>
+    <Group>
+      <Rect width="2086" height="457">
+        <fill>
+          <SolidColor color="#ffffff" alpha="1"/>
+        </fill>
+      </Rect>
+    </Group>
+  </mask>
+  <!--Unknown tag: sodipodi:namedview-->
+  <!--Unknown tag: defs-->
+  <Group id="layer1">
+    <Rect x="11" y="60" width="181" height="8" id="rect85">
+      <fill>
+        <SolidColor color="#69B628" alpha="1"/>
+      </fill>
+    </Rect>
+    <Rect x="246" y="60" width="294" height="8" id="rect858">
+      <fill>
+        <SolidColor color="#666AC2" alpha="1"/>
+      </fill>
+    </Rect>
+    <Rect x="192" y="60" width="54" height="8" id="rect857">
+      <fill>
+        <SolidColor color="#C83737" alpha="1"/>
+      </fill>
+    </Rect>
+    <Group>
+      <transform>
+        <Transform>
+          <matrix>
+            <Matrix a="0.25159807" b="0" c="0" d="0.26458333" tx="148.13" ty="-119.12"/>
+          </matrix>
+        </Transform>
+      </transform>
+      <RichText alignmentBaseline="ascent" fontSize="25" fontWeight="normal" fontFamily="sans-serif" fontStyle="normal" color="#000000" textAlpha="1" lineHeight="1" id="text5145" whiteSpaceCollapse="preserve">
+        <content/>
+      </RichText>
+    </Group>
+    <RichText alignmentBaseline="ascent" fontSize="6" fontWeight="normal" fontFamily="sans-serif" fontStyle="normal" color="#FFFFFF" textAlpha="1" lineHeight="1" x="193" y="66" id="text16355">
+      <content>
+        <span whiteSpaceCollapse="preserve" color="#FFFFFF" textAlpha="1" fontSize="6">NNNNNNNNNNN</span>
+      </content>
+    </RichText>
+    <Group>
+      <transform>
+        <Transform>
+          <matrix>
+            <Matrix a="0.26458333" b="0" c="0" d="0.26458333" tx="283.21" ty="-99.13"/>
+          </matrix>
+        </Transform>
+      </transform>
+      <RichText alignmentBaseline="ascent" fontSize="24" fontWeight="normal" fontFamily="sans-serif" fontStyle="normal" color="#FFFFFF" textAlpha="1" lineHeight="1" id="text24603">
+        <content>
+          <span whiteSpaceCollapse="preserve">gcacaggcgcagaccggctgggttcaaaaccaaggaatacttccgggtatggtttggcaggacagagatgtgtacctgcaagg</span>
+        </content>
+      </RichText>
+    </Group>
+    <Group>
+      <transform>
+        <Transform>
+          <matrix>
+            <Matrix a="0.26458333" b="0" c="0" d="0.26458333" tx="386.73" ty="-50.94"/>
+          </matrix>
+        </Transform>
+      </transform>
+      <RichText alignmentBaseline="ascent" fontSize="40" fontWeight="normal" fontFamily="sans-serif" fontStyle="normal" color="#666AC2" textAlpha="1" lineHeight="1" id="text36089">
+        <content>
+          <span whiteSpaceCollapse="preserve">3' Adapter</span>
+        </content>
+      </RichText>
+    </Group>
+    <Group>
+      <transform>
+        <Transform>
+          <matrix>
+            <Matrix a="0.26458333" b="0" c="0" d="0.26458333" tx="305.2" ty="-53"/>
+          </matrix>
+        </Transform>
+      </transform>
+      <RichText alignmentBaseline="ascent" fontSize="40" fontWeight="normal" fontFamily="sans-serif" fontStyle="normal" color="#A51D1E" textAlpha="1" lineHeight="1" id="text360898">
+        <content>
+          <span whiteSpaceCollapse="preserve">ROI
+</span>
+        </content>
+      </RichText>
+    </Group>
+    <Group>
+      <transform>
+        <Transform>
+          <matrix>
+            <Matrix a="0.26458333" b="0" c="0" d="0.26458333" tx="139.16" ty="-52.64"/>
+          </matrix>
+        </Transform>
+      </transform>
+      <RichText alignmentBaseline="ascent" fontSize="40" fontWeight="normal" fontFamily="sans-serif" fontStyle="normal" color="#69B628" textAlpha="1" lineHeight="1" id="text360899">
+        <content>
+          <span whiteSpaceCollapse="preserve">5' Adapter</span>
+        </content>
+      </RichText>
+    </Group>
+    <Group>
+      <transform>
+        <Transform>
+          <matrix>
+            <Matrix a="0.26458333" b="0" c="0" d="0.26458333" tx="350.15" ty="-96.4"/>
+          </matrix>
+        </Transform>
+      </transform>
+      <RichText alignmentBaseline="ascent" fontSize="53" fontWeight="normal" fontFamily="sans-serif" fontStyle="normal" color="#000000" textAlpha="1" lineHeight="1" id="text3608995">
+        <content>
+          <span whiteSpaceCollapse="preserve">Amplicon</span>
+        </content>
+      </RichText>
+    </Group>
+    <Path data="m 43.292543 84.739375 c 2.90093 -0.51563 5.82133 -0.86479 8.75733 -1.09802 3.92158 -0.31072 7.82402 0.1634 11.71417 0.59174 2.389533 0.31098 4.781823 0.60325 7.182813 0.81032 1.48251 0.13558 2.81634 -0.4809 4.15857 -1.01061 2.03445 -0.92142 4.24514 -1.24221 6.4441 -1.48572 2.48229 -0.22381 4.97545 -0.26347 7.46613 -0.27661 1.44888 0.0185 2.90233 -0.0659 4.348619 0.0602 0.928127 0.0809 2.213027 0.28546 3.129687 0.42107 1.9427 0.29898 1.00173 0.15429 2.82291 0.43412 0 0 3.122198 -2.19961 3.122198 -2.19961 v 0 c -1.84362 -0.25813 -0.89331 -0.12109 -2.850678 -0.41264 -0.41149 -0.0634 -2.68244 -0.41758 -3.11804 -0.46863 -1.43949 -0.16869 -2.883554 -0.10342 -4.329087 -0.10946 -2.513509 0.0293 -5.028369 0.0812 -7.534999 0.2831 -2.18415 0.20149 -4.40874 0.45569 -6.43692 1.34642 -1.30861 0.52071 -2.6145 1.19422 -4.05658 1.15406 -2.43226 -0.15413 -4.85503 -0.41688 -7.27153 -0.73214 -3.915263 -0.40448 -7.841173 -0.87575 -11.785683 -0.62371 -2.8885 0.20089 -5.7562 0.52728 -8.62104 0.94584 0 0 -3.14197 2.37027 -3.14197 2.37027 z" winding="nonZero" id="path44308">
+      <fill>
+        <SolidColor color="#FFFFFF" alpha="0"/>
+      </fill>
+    </Path>
+    <Path data="m 46.984173 81.904315 c 0.45818 -0.0309 0.91543 -0.0825 1.37453 -0.0927 6.07741 -0.13421 12.17378 0.41365 18.230783 0.83837 0 0 2.8744 -2.06046 2.8744 -2.06046 v 0 c -3.82448 -0.22131 -7.647353 -0.46853 -11.471673 -0.69188 -0.2398 -0.014 -5.81377 -0.32437 -6.55306 -0.3449 -0.43347 -0.012 -0.8671 0.0168 -1.30065 0.0252 0 0 -3.15433 2.32629 -3.15433 2.32629 z" winding="nonZero" id="path44310">
+      <fill>
+        <SolidColor color="#FFFFFF" alpha="0"/>
+      </fill>
+    </Path>
+    <Rect x="26" y="79" width="61" height="2" id="rect45753">
+      <fill>
+        <SolidColor color="#000000" alpha="0"/>
+      </fill>
+    </Rect>
+    <Rect x="26" y="80" width="105" height="2" id="rect46210">
+      <fill>
+        <SolidColor color="#000000" alpha="0"/>
+      </fill>
+    </Rect>
+    <Rect x="-125" y="106" width="16" height="35" id="rect46281">
+      <fill>
+        <SolidColor color="#000000" alpha="0"/>
+      </fill>
+    </Rect>
+    <Rect x="46" y="82" width="54" height="17" id="rect46307">
+      <fill>
+        <SolidColor color="#000000" alpha="0"/>
+      </fill>
+    </Rect>
+    <Rect x="-162" y="208" width="93" height="17" id="rect46309">
+      <fill>
+        <SolidColor color="#000000" alpha="0"/>
+      </fill>
+    </Rect>
+    <Rect x="356" y="78" width="40" height="2" id="rect85768">
+      <fill>
+        <SolidColor color="#000000" alpha="1"/>
+      </fill>
+    </Rect>
+    <Group scaleX="0.26458333" scaleY="0.26458333">
+      <Path data="m -62.062374 532.92701 -87.365556 3.15275 -46.93172 73.757 -29.99588 -82.11533 -84.64977 -21.84255 68.82708 -53.90281 -5.38472 -87.25644 72.53336 48.80157 81.321829 -32.0849 -23.998999 84.06384 z" winding="nonZero" id="path46496">
+        <fill>
+          <SolidColor color="#000000" alpha="0"/>
+        </fill>
+      </Path>
+    </Group>
+    <Group>
+      <transform>
+        <Transform>
+          <matrix>
+            <Matrix a="0.26458333" b="0" c="0" d="0.26458333" tx="191.82" ty="-23.45"/>
+          </matrix>
+        </Transform>
+      </transform>
+      <Path data="m -196.9806 461.42036 -22.91043 -54.32033 -48.59624 -33.37652 54.32033 -22.91043 33.37652 -48.59623 22.91043 54.32033 48.59623 33.37652 -54.32033 22.91042 z" winding="nonZero" id="path46500">
+        <fill>
+          <SolidColor color="#000000" alpha="0"/>
+        </fill>
+      </Path>
+    </Group>
+    <Group id="g115137">
+      <Rect x="104" y="77" width="40" height="2" id="rect8576">
+        <fill>
+          <SolidColor color="#000000" alpha="1"/>
+        </fill>
+      </Rect>
+      <Group>
+        <transform>
+          <Transform>
+            <matrix>
+              <Matrix a="0.26458333" b="0" c="0" d="0.26458333" tx="227.88" ty="-85.21"/>
+            </matrix>
+          </Transform>
+        </transform>
+        <Path data="m -287.37582 617.92548 c 0 1.8706 -14.894 7.85126 -16.51399 8.78656 -1.61999 0.9353 -14.2464 10.84356 -15.86639 9.90826 -1.61999 -0.93531 0.64761 -16.82422 0.64761 -18.69482 0 -1.87061 -2.2676 -17.75952 -0.64761 -18.69482 1.61999 -0.9353 14.2464 8.97295 15.86639 9.90825 1.61999 0.9353 16.51399 6.91596 16.51399 8.78657 z" winding="evenOdd" id="path46528">
+          <fill>
+            <SolidColor color="#000000" alpha="1"/>
+          </fill>
+        </Path>
+      </Group>
+    </Group>
+    <Group>
+      <transform>
+        <Transform>
+          <matrix>
+            <Matrix a="0.26458333" b="0" c="0" d="0.26458333" tx="479.98" ty="-84.14"/>
+          </matrix>
+        </Transform>
+      </transform>
+      <Path data="m -287.37582 617.92548 c 0 1.8706 -14.894 7.85126 -16.51399 8.78656 -1.61999 0.9353 -14.2464 10.84356 -15.86639 9.90826 -1.61999 -0.93531 0.64761 -16.82422 0.64761 -18.69482 0 -1.87061 -2.2676 -17.75952 -0.64761 -18.69482 1.61999 -0.9353 14.2464 8.97295 15.86639 9.90825 1.61999 0.9353 16.51399 6.91596 16.51399 8.78657 z" winding="evenOdd" id="path465289">
+        <fill>
+          <SolidColor color="#000000" alpha="1"/>
+        </fill>
+      </Path>
+    </Group>
+  </Group>
+</Graphic>

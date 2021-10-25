@@ -1,0 +1,60 @@
+---
+title: "CellRanger Count"
+author: "Maggie Shaw"
+date: "6/23/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## How to use CellRanger [Count](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/count) and combine mulitple runs
+
+Basic instructions for running the count tool from CellRanger with instructions on how to combine multiple runs of the same sample.
+
+### Basic Count Command
+**Basic Non-Submitted Command**
+```{}
+cellranger count --id=4657 
+--transcriptome=/home/shawma/CellRanger/testdata_28Jan2021/reference_test/refdata-gex-mm10-2020-A --fastqs=/home/shawma/CellRanger/testdata_28Jan2021/H7JT5BGXH/outs/fastq_path/ 
+--sample=4657 --include-introns --localcores=16 --localmem=100 --r1-length=26
+```
+
+Breakdown </br>
+- For each sample change, **--id=** and **--sample=** </br>
+    - **id** = name of the output file for that unique sample name </br>
+    - **sample** = unique sample identifier, raw fastqs should be a folder with this sample id for each sample </br>
+- The **--transcriptome** tag should be the output from the directory from using CellRanger [mkref](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/advanced/references) </br>
+- use the **--include-introns** tag when running 10x on nuclei
+- use full path for **transcriptome** and **fastqs** </br>
+- **-NOTE : --r1-length=26** This was added after the fact, got an error that said some of our UMIs were greater than length 26 (26-28 was the range), this just forces them to 26, seemed to resolve the issue
+
+**IMPORTANT SETUP NOTE** - Only one sample's fastqs should be in a folder. One folder for each sample. The output will follow the same format.  
+
+### Submitting to the HPC
+CellRanger is preloaded on the HPC as a module. When you submit the job be sure to also load the module. The count step is computationally taxing and will take some time to complete, be sure to ask for addtional memory and nodes.
+
+```{}
+bsub -o count_out.txt -e count_error.txt -M 100000 -n 16 "module load cellranger/5.0.1;cellranger count --id=4657 --transcriptome=/home/shawma/CellRanger/testdata_28Jan2021/reference_test/refdata-gex-mm10-2020-A --fastqs=/home/shawma/CellRanger/testdata_28Jan2021/H7JT5BGXH/outs/fastq_path/ --sample=4657 --include-introns --localcores=16 --localmem=100 --r1-length=26"
+```
+
+- make sure the **-M** and **-n** in the job submission match **--localmem** and **--localcores**, the two cell ranger commands give a limit to the allocated local memory and cores. The job submission commands should not exceed these numbers as it may cause problems with the queue and job submission. For now its safest to match them.
+
+
+### Submitting multiple runs for each sample
+To submit multiple runs ALL runs for a sample must have the same **sampleID** folder name and file prefix. They can be in different locations (ie B# folders) but the imediate directory name must be identical to eachother and to the **--sample** tag. CellRanger allows you to comma deliminate the **--fastqs** field to list multiple runs to pool together. 
+
+```{}
+bsub -o count_out.txt -e count_error.txt -M 100000 -n 16 "module load cellranger/5.0.1;cellranger count --id=4657 --transcriptome=/home/shawma/CellRanger/testdata_28Jan2021/reference_test/refdata-gex-mm10-2020-A --fastqs=/home/shawma/CellRanger/testdata_28Jan2021/H7JT5BGXH/outs/fastq_pathA/,/home/shawma/CellRanger/testdata_28Jan2021/H7JT5BGXH/outs/fastq_pathB/,/home/shawma/CellRanger/testdata_28Jan2021/H7JT5BGXH/outs/fastq_pathC/ --sample=4657 --include-introns --localcores=16 --localmem=100 --r1-length=26"
+```
+
+
+To understand this a little better, for the example above you would find a set of fastqs(corresponding R1,R2 I1, I2) for the single sample 4657 in the following directories: </br>
+      **Run #1** - /home/shawma/CellRanger/testdata_28Jan2021/H7JT5BGXH/outs/fastq_pathA/4657 </br>
+      **Run #2** - /home/shawma/CellRanger/testdata_28Jan2021/H7JT5BGXH/outs/fastq_pathB/4657 </br>
+      **Run #3** - /home/shawma/CellRanger/testdata_28Jan2021/H7JT5BGXH/outs/fastq_pathC/4657 </br>
+    
+
+    
+    

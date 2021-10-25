@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Maggie Shaw" />
+
+
+<title>BarcodeBatch Guide</title>
+
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">My Website</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="bioinformatics_basics.html">Bioinformatics Basics</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Pipeline Walkthrough's
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="WT_BarcodeLibrary_MS08Oct2021.html">Walkthrough: Library/Barcode Projects</a>
+    </li>
+    <li>
+      <a href="BarcodeBatchforLibraryProjects_MS16July2021.html">How to Run: Library/Barcode Projects</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Guides
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Archiving_Guide_26Mar2020.html">How to: Archive</a>
+    </li>
+    <li>
+      <a href="ConcatenatingGuide.html">How to: Concatenate</a>
+    </li>
+    <li>
+      <a href="CellRanger_Count.html">CellRanger - Count</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">BarcodeBatch Guide</h1>
+<h4 class="author">Maggie Shaw</h4>
+<h4 class="date">7/16/2021</h4>
+
+</div>
+
+
+<div id="how-to-use-barcodebatch.sh" class="section level1">
+<h1>How to use <code>barcodebatch.sh</code></h1>
+<div id="requirements" class="section level2">
+<h2>Requirements</h2>
+<ol style="list-style-type: decimal">
+<li>Basic knowledge and comfort with bash scripting and the HPC</li>
+<li>The 2 scripts found in the <strong>barcodebatchscripts</strong> folder</li>
+<li>Installation of R on the HPC </br></li>
+</ol>
+<div id="note-before-you-get-started" class="section level4">
+<h4>NOTE: Before you get started</h4>
+<p>Be sure to use <code>vim</code> to edit the barcodebatch.sh script on line <strong>49</strong>. Here you will need to change the directory path to the path where you store the R counter script found in the <strong>barcodebatchscripts</strong> folder.</p>
+</div>
+</div>
+<div id="using-the-pipeline" class="section level2">
+<h2>Using the pipeline</h2>
+<p>The barcodebatch.sh script requires (in order) 3 inputs; </br> 1. Your raw fastq directory </br> 2. Your <span style="color:orange"><strong>3’</strong></span> “Adapter” </br> 3. Your <span style="color:lightseagreen"><strong>5’</strong></span> “Adapter” </br></p>
+<p>The “adapters” in our case are the 2 flanking regions surrounding the region you’re interested in. For the following sequence you can see the <span style="color:lightseagreen"><strong>5’</strong></span> and <span style="color:orange"><strong>3’</strong></span> adapters labeled. </br></p>
+<p><span style="color:lightseagreen"><strong>gtagcaacggagtcctatggacaagtggccacaaaccaccagagtgcccaa</strong></span>NNNNNNN<span style="color:orange"><strong>gcacaggcgcagaccggctgggttcaaaaccaaggaatacttccgggtatggtttggcaggacagagatgtgtacctgcaagg</strong></span></p>
+<p>Note: To input the code, it is best practice to use the full paths for your script and input data. Be sure to run the script from where you want the output to be sent. A directory starting with <strong>“Amplicon_Barcode_Analysis_<em>username</em>”</strong> will be generated from where you submit the code. </br></p>
+<p>To run without submitting to the queue …</p>
+<pre><code>sh /home/shawma/Library_Projects/barcodebatch.sh /home/shawma/Library_Projects/B700_JacobH_16July2021/fastqs gcacaggcgcagaccggctgggttcaaaaccaaggaatacttccgggtatggtttggcaggacagagatgtgtacctgcaagg gtagcaacggagtcctatggacaagtggccacaaaccaccagagtgcccaa
+</code></pre>
+<p>Because these projects are often very large it is best practice to submit your job to the HPC queue. Try submitting with the following memory and node settings and raise them if the jobs get dumped before they complete.</p>
+<pre><code>bsub -M 100000 -n 4 &quot;sh /home/shawma/Library_Projects/barcodebatch.sh /home/shawma/Library_Projects/B700_JacobH_16July2021/fastqs gcacaggcgcagaccggctgggttcaaaaccaaggaatacttccgggtatggtttggcaggacagagatgtgtacctgcaagg gtagcaacggagtcctatggacaagtggccacaaaccaccagagtgcccaa&quot;
+</code></pre>
+</div>
+<div id="under-the-hood-whats-going-on-in-the-script" class="section level2">
+<h2>Under the Hood: Whats going on in the script?</h2>
+<div id="lines-1---15---help-message-and-environment-setup" class="section level4">
+<h4><strong>Lines 1 - 15</strong> - Help message and environment setup</h4>
+<pre class="bash"><code>if [[ $1 == &quot;&quot; ]]; then
+  echo &quot;Usage: $0 [source FASTA directory] [3&#39; adapter] [5&#39;adapter]&quot;
+  echo &quot;Example: $0 /project/gtplab/GTP_VC_NAT_NGS/A756WL/fastqs/ CCATAGCCTTATCCGGCAGGTGACATTCTCATTCTCACGCGACGAGAGCC GGCGAACAGCGGACACCGATATGAACCTGCCTGCGAAGTGTCGTCTATGGATGTACAAGTAA&quot;
+  exit
+fi
+
+##
+
+SOURCEPATH=$1
+ADAPT3=$2
+ADAPT5=$3
+TOOLSPATH=&quot;/project/gtplab/BioInformatics/Software/bin/&quot;
+TIMESTAMP=$(date +%Y-%m-%d-%H_%M_%S)
+OUTDIR=&quot;$(pwd)/Amplicon_Barcode_Analysis_${USER}_${TIMESTAMP}/&quot;
+mkdir ${OUTDIR}</code></pre>
+<p>This will establish your new directory and set the arguments called when you ran the script. </br> </br></p>
+</div>
+<div id="lines-18-22---join-r1-and-r2" class="section level4">
+<h4><strong>Lines 18-22</strong> - Join R1 and R2</h4>
+<pre class="bash"><code>#go through all fastq.gz and join pair-end reads
+FILES=${SOURCEPATH}*R1*.fastq.gz
+for f in ${FILES}
+do
+   echo $f
+   outfile=${f/${SOURCEPATH}/${OUTDIR}}
+   outfile=${outfile/.gz/}
+   outfile=${outfile/_R1/}
+   echo &quot;processing ${f} and ${f/_R1_/_R2_} as $outfile&quot;
+   ${TOOLSPATH}fastq-join -p 10 ${f} ${f/_R1_/_R2_} -o $outfile
+done
+</code></pre>
+<p>The tool used in this step is <strong>fastq-join</strong> to combine R1 and R2 into a single out file. The tool will combine read pairs based on a specified <code>-p</code>. The <code>-p</code> is a percent maximum difference between the overlapping regions of R1 and R2. So in this case the overlapping region for R1 and R2 is only allowed to be 10% different. </br> </br></p>
+</div>
+<div id="lines-31-42---adapter-trimming-and-quality-filtering" class="section level4">
+<h4><strong>Lines 31-42</strong> - Adapter Trimming and Quality filtering</h4>
+<pre class="bash"><code>#trim adapters
+module load R/3.3.1
+FILES=${OUTDIR}*.fastqjoin
+for f in ${FILES}
+do
+  echo &quot;processing ${f}&quot;
+  ${TOOLSPATH}fastx_reverse_complement -Q33 -i ${f} -o &quot;${f}.r&quot;
+  echo &quot;${f}.r&quot; &gt;&gt; ${f}
+  ${TOOLSPATH}cutadapt -a $2 --discard-untrimmed -o &quot;${f}.cut3&quot; ${f}
+  ${TOOLSPATH}cutadapt -g $3 --discard-untrimmed -m 6 -o ${f/.fastq/.trimmed.fastq} &quot;${f}.cut3&quot;
+  ${TOOLSPATH}fastq_quality_filter -Q33 -q 20 -p 100 -i ${f/.fastq/.trimmed.fastq} -o ${f/.fastq/.final.fastq}
+  ${TOOLSPATH}fastq_to_fasta -Q33 -i ${f/.fastq/.final.fastq} -o ${f/.fastqjoin/.final.fasta}
+done</code></pre>
+<p>This section of the code will perform the following;</br> 1. <strong>fastx_reverse_complement</strong> will get the reverse compliments of the reads from the previous step and concatenate them to the end of the foward orientation read file.</br> 2. <strong>cutadapt</strong> will trim the <span style="color:orange"><strong>3’</strong></span> and <span style="color:lightseagreen"><strong>5’</strong></span>adapters from either end of your reads</br> 3. <strong>fastq_quality_filter</strong> will filter reads for</p>
+</div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

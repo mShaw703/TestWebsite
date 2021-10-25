@@ -1,0 +1,101 @@
+---
+title: "Guide: Archiving Nat Core Data"
+author: "Maggie Shaw (email: shawma@upenn.edu) "
+date: "Last update: 2/14/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+___
+
+## <span style="color:Teal">**Paths to Important Directories**</span>
+
+* <span style="color:lightseagreen">**Archiving Scripts:**</span> **/project/gtplab/Archiving/Scripts**
+* <span style="color:lightseagreen">**Rsync Reports, Logs, and InterOp Data:**</span> **/project/gtplab/Archiving/**<span style="color:gray">***sequencer***</span>**/**<span style="color:gray">***YYMonth***</span>
+* <span style="color:lightseagreen">**Data to Archive:**</span> **/project/gtplab_testxfer/gtp01/**<span style="color:gray">***sequencer***</span>
+* <span style="color:lightseagreen">**Archived Data:**</span> **/archivetape/gtplab/**<span style="color:gray">***sequencer***</span>**/**<span style="color:gray">***YYMonth***</span>
+
+<span style="color:maroon">**NOTE: To acces **</span><span style="color:lightseagreen">**Archived Data**</span><span style="color:maroon"> **you must access the HPC via @mercury.pmacs.upenn.edu NOT consign. Exit the HPC or open a new command prompt and log into HPC with:** </span> 
+```{bash, eval=FALSE}
+ssh _username_@mercury.pmacs.upenn.edu
+```
+
+## <span style="color:Teal">**How to Archive from the HPC** </span>
+
+**Remember to use `cd` followed by your path to navigate into important directories**
+
+Log onto your HPC account and navigate to a <span style="color:lightseagreen">**Data to Archive**</span> location, selecting one of the three available sequencers; **M04119**, **M05589**, or **NB501320**. Use `ls` to see what is available to archive for the selected sequencer. 
+
+Once you've selected your sequncer, year, and month to archive. Navigate to the location of the <span style="color:lightseagreen">**Archiving Scripts**</span> on the HPC. There are three scipts in this directory;
+
+  * **NatCore_archive_wrapper.sh**
+  * **NatCore_archive_data_GTP.sh**
+  * **ORIGINAL_archive_data_put_GTP.sh**
+
+The **wrapper script** will use the other **NatCore_archive** script to call data. The **ORIGINAL** script is not used for general archiving but is also stored here for archiving data outside of the 3 sequencers.
+
+<span style="color:maroon">**NOTE:**</span> If someone requests to archive data outside of the 3 regular sequencers OR the gtp_testxfer directory, this guide will not work. Please email me for any special requests.
+
+In the <span style="color:lightseagreen">**Archiving Scripts**</span> directory you can use the command ..
+```{bash, eval=FALSE}
+sh NatCore_archive_wrapper.sh
+```
+
+And the following prompt will come up giving instructions and an example for archiving. 
+```{bash, eval=FALSE}
+Usage:   NatCore_archive_wrapper.sh -m [MONTH] -y [YEAR] -s [SEQUENCER]
+Options:
+   -m    Abbreviated or full text version for month of archive data, ie 'March' or 'Mar'
+   -y    Short numeric format for year of year for data archive, ie. '19'
+   -s    Sequencer ID, as listed in gtplab_testxfer
+Example: NatCore_archive_wrapper.sh -m Mar -y 19 -s NB501320
+```
+
+To run **Febrary 2019** for **M04119** please enter ..
+
+```{bash, eval=FALSE}
+sh NatCore_archive_wrapper.sh -m February -y 19 -s M04119
+```
+
+**This is the only command needed to archive.** Once you have entered this command, you can monitor your jobs progress, check that the data is properly archived, and then delete data from the sequencer and the gtplab_testxfer 
+
+## <span style="color:Teal">**Monitoring the Archive Process**</span>
+
+The first part of the script will condense data together into a single file. The condensing portion of the archiving process will take the longest. There are a few ways to monitor archving progress;
+
+**1. Use the command `bjobs` or `bjobs -l`(for more detail), to see that your job has submitted**
+
+**2. Go to the location of your <span style="color:lightseagreen">**Data to Archive**</span>. Once in this location, you should see a new file ending in *.tar.gz* and beginning with your 2 digit selected year, followed by the month and sequencer ID**
+
+If you use the command **`ll`** a few times in a row, you should see the new file ***YYMonth*_*SequencerID*.archive.tar.gz** growing in size. 
+
+**Contents of your new file:** The new file is the compressed version of all the files in this directory starting with the 4 number format of your selected Year and Month. So for Febuary 2019 you would see **19Febuary_M04119.archive.tar.gz** and compressed into this single file would be all the folders in this directory starting with **1902**.
+
+**3. Once your data is compressed you can go to the location of your **<span style="color:lightseagreen">**Rsync Reports, Logs, and InterOp Data**</span> **and you should see a few files in your new directory** <span style="color:gray">**(/project/gtplab/Archiving/*SEQUENCER/YYMONTH*)**</span> 
+
+___
+
+**Contents of **<span style="color:teal">**Rsync Reports, Logs, and InterOp Data**</span>**:**
+<span style="color:gray">**These files are generated as the code runs so not all files and directories will be available as soon as you submit your job.**</span>
+
+  * <span style="color:lightseagreen">***YYMONTH_SEQUENCER*.manifest**</span>: A full report of every file and directory included in the data that is archived. *NOTE 14Feb2020: This could be used in the future to seach for data you need to pull off the archive tape*
+  * <span style="color:lightseagreen">***YYMONTH_SEQUENCER*.tar.gz.md5sum**</span>: md5sum for your <span style="color:gray">***YYMonth*_*SequencerID*.archive.tar.gz**</span> file. This is useful to check that a complete file is synched to the archive tape. 
+  * <span style="color:lightseagreen">**Directory: Inter_Op_Files**</span>: Storage space for InterOp files for each run stored in your <span style="color:gray">***YYMonth*_*SequencerID*.archive.tar.gz**</span>
+  * <span style="color:lightseagreen">**Directory: log**</span>: Contains standard output files for your job submission.
+  * <span style="color:lightseagreen">**rsync_include_files_list_*TIMESTAMP*.txt**</span>: List of the file/s to be synched to the archive tape. This is a list of the compressed files to be synched, not the files in the compressed file.
+  * <span style="color:lightseagreen">**rsync_xfer_*TIMESTAMP*.log**</span>: Report from the rsync to the archive tape. 
+  
+<span style="color:gray">**In some cases the compressed file will be too big to archive at once, the script handles this by splitting the compressed files into parts, the name of the compressed file willl reflect which part it is and each part will be listed in the included files text file.**</span>
+
+___
+
+**4. View your syched data on the** <span style="color:lightseagreen">**Archive**</span> **Once your job is complete you should be able to go to the arhive tape and see your compressed file in the correct SEQUENCER directory**
+
+## <span style="color:Teal">**Logging your Archive and Deleting Data**</span>
+
+#### COMING SOON
+
+

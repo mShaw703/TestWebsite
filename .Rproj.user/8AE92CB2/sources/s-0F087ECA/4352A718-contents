@@ -1,0 +1,48 @@
+---
+title: "How to Run: The barcodebatch.sh script for Library Projects"
+date: "Last Update: Oct. 15 2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Requirements
+1. Basic knowledge and comfort with bash scripting and the HPC
+2. The 2 scripts found in the **barcodebatchscripts** folder
+3. Installation of R on the HPC
+</br>
+
+**NOTE: Before you get started** </br>
+Be sure to use `vim` to edit the barcodebatch.sh script on line **49**. Here you will need to change the directory path to the path where you store the R counter script found in the **barcodebatchscripts** folder.
+
+### **Using the pipeline**
+The barcodebatch.sh script requires (in order) 3 inputs; </br>
+1. Your raw fastq directory </br>
+2. Your <span style="color:royalblue">**3'**</span> "Adapter" </br>
+3. Your  <span style="color:yellowgreen">**5'**</span> "Adapter" </br>
+
+The "adapters" in our case are the 2 flanking regions surrounding the <span style="color:firebrick">region of interest</span>. For the following sequence you can see the <span style="color:yellowgreen">**5'**</span> and <span style="color:royalblue">**3'**</span> adapters labeled. </br>
+
+![](images\libraryamplicon.svg)
+
+Note: To input the code, it is best practice to use the full paths for your script and input data. Be sure to run the script from where you want the output to be sent. A directory starting with **"Amplicon_Barcode_Analysis_*username*"** will be generated from where you submit the code. 
+</br>
+
+### **How to Run Examples:** 
+
+
+To run without submitting to the queue ...
+```{}
+sh /home/shawma/Library_Projects/barcodebatch.sh /home/shawma/Library_Projects/B700_JacobH_16July2021/fastqs gcacaggcgcagaccggctgggttcaaaaccaaggaatacttccgggtatggtttggcaggacagagatgtgtacctgcaagg gtagcaacggagtcctatggacaagtggccacaaaccaccagagtgcccaa
+
+```
+
+
+Because these projects are often very large it is best practice to submit your job to the HPC queue. Try submitting with the following memory and node settings and raise them if the jobs get dumped before they complete.
+```{}
+bsub -M 100000 -n 4 "sh /home/shawma/Library_Projects/barcodebatch.sh /home/shawma/Library_Projects/B700_JacobH_16July2021/fastqs gcacaggcgcagaccggctgggttcaaaaccaaggaatacttccgggtatggtttggcaggacagagatgtgtacctgcaagg gtagcaacggagtcctatggacaagtggccacaaaccaccagagtgcccaa"
+
+```
+

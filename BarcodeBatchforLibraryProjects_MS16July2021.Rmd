@@ -1,0 +1,116 @@
+---
+title: "BarcodeBatch Guide"
+author: "Maggie Shaw"
+date: "7/16/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# How to use `barcodebatch.sh`
+
+## Requirements
+1. Basic knowledge and comfort with bash scripting and the HPC
+2. The 2 scripts found in the **barcodebatchscripts** folder
+3. Installation of R on the HPC
+</br>
+
+#### NOTE: Before you get started
+Be sure to use `vim` to edit the barcodebatch.sh script on line **49**. Here you will need to change the directory path to the path where you store the R counter script found in the **barcodebatchscripts** folder.
+
+## Using the pipeline
+The barcodebatch.sh script requires (in order) 3 inputs; </br>
+1. Your raw fastq directory </br>
+2. Your <span style="color:orange">**3'**</span> "Adapter" </br>
+3. Your  <span style="color:lightseagreen">**5'**</span> "Adapter" </br>
+
+The "adapters" in our case are the 2 flanking regions surrounding the region you're interested in. For the following sequence you can see the <span style="color:lightseagreen">**5'**</span> and <span style="color:orange">**3'**</span> adapters labeled. </br>
+
+<span style="color:lightseagreen">**gtagcaacggagtcctatggacaagtggccacaaaccaccagagtgcccaa**</span>NNNNNNN<span style="color:orange">**gcacaggcgcagaccggctgggttcaaaaccaaggaatacttccgggtatggtttggcaggacagagatgtgtacctgcaagg**</span>
+
+Note: To input the code, it is best practice to use the full paths for your script and input data. Be sure to run the script from where you want the output to be sent. A directory starting with **"Amplicon_Barcode_Analysis_*username*"** will be generated from where you submit the code. 
+</br>
+
+To run without submitting to the queue ...
+```{}
+sh /home/shawma/Library_Projects/barcodebatch.sh /home/shawma/Library_Projects/B700_JacobH_16July2021/fastqs gcacaggcgcagaccggctgggttcaaaaccaaggaatacttccgggtatggtttggcaggacagagatgtgtacctgcaagg gtagcaacggagtcctatggacaagtggccacaaaccaccagagtgcccaa
+
+```
+
+
+Because these projects are often very large it is best practice to submit your job to the HPC queue. Try submitting with the following memory and node settings and raise them if the jobs get dumped before they complete.
+```{}
+bsub -M 100000 -n 4 "sh /home/shawma/Library_Projects/barcodebatch.sh /home/shawma/Library_Projects/B700_JacobH_16July2021/fastqs gcacaggcgcagaccggctgggttcaaaaccaaggaatacttccgggtatggtttggcaggacagagatgtgtacctgcaagg gtagcaacggagtcctatggacaagtggccacaaaccaccagagtgcccaa"
+
+```
+
+
+## Under the Hood: Whats going on in the script?
+
+#### **Lines 1 - 15** - Help message and environment setup
+```{bash, eval = FALSE}
+if [[ $1 == "" ]]; then
+  echo "Usage: $0 [source FASTA directory] [3' adapter] [5'adapter]"
+  echo "Example: $0 /project/gtplab/GTP_VC_NAT_NGS/A756WL/fastqs/ CCATAGCCTTATCCGGCAGGTGACATTCTCATTCTCACGCGACGAGAGCC GGCGAACAGCGGACACCGATATGAACCTGCCTGCGAAGTGTCGTCTATGGATGTACAAGTAA"
+  exit
+fi
+
+##
+
+SOURCEPATH=$1
+ADAPT3=$2
+ADAPT5=$3
+TOOLSPATH="/project/gtplab/BioInformatics/Software/bin/"
+TIMESTAMP=$(date +%Y-%m-%d-%H_%M_%S)
+OUTDIR="$(pwd)/Amplicon_Barcode_Analysis_${USER}_${TIMESTAMP}/"
+mkdir ${OUTDIR}
+```
+This will establish your new directory and set the arguments called when you ran the script.
+</br>
+</br>
+
+
+#### **Lines 18-22** - Join R1 and R2 
+```{bash, eval=FALSE}
+#go through all fastq.gz and join pair-end reads
+FILES=${SOURCEPATH}*R1*.fastq.gz
+for f in ${FILES}
+do
+   echo $f
+   outfile=${f/${SOURCEPATH}/${OUTDIR}}
+   outfile=${outfile/.gz/}
+   outfile=${outfile/_R1/}
+   echo "processing ${f} and ${f/_R1_/_R2_} as $outfile"
+   ${TOOLSPATH}fastq-join -p 10 ${f} ${f/_R1_/_R2_} -o $outfile
+done
+
+```
+
+The tool used in this step is **fastq-join** to combine R1 and R2 into a single out file. The tool will combine read pairs based on a specified `-p`. The `-p` is a percent maximum difference between the overlapping regions of R1 and R2. So in this case the overlapping region for R1 and R2 is only allowed to be 10% different. 
+</br>
+</br>
+
+
+#### **Lines 31-42** - Adapter Trimming and Quality filtering
+```{bash, eval=FALSE}
+#trim adapters
+module load R/3.3.1
+FILES=${OUTDIR}*.fastqjoin
+for f in ${FILES}
+do
+  echo "processing ${f}"
+  ${TOOLSPATH}fastx_reverse_complement -Q33 -i ${f} -o "${f}.r"
+  echo "${f}.r" >> ${f}
+  ${TOOLSPATH}cutadapt -a $2 --discard-untrimmed -o "${f}.cut3" ${f}
+  ${TOOLSPATH}cutadapt -g $3 --discard-untrimmed -m 6 -o ${f/.fastq/.trimmed.fastq} "${f}.cut3"
+  ${TOOLSPATH}fastq_quality_filter -Q33 -q 20 -p 100 -i ${f/.fastq/.trimmed.fastq} -o ${f/.fastq/.final.fastq}
+  ${TOOLSPATH}fastq_to_fasta -Q33 -i ${f/.fastq/.final.fastq} -o ${f/.fastqjoin/.final.fasta}
+done
+```
+
+This section of the code will perform the following;</br>
+1. **fastx_reverse_complement** will get the reverse compliments of the reads from the previous step and concatenate them to the end of the foward orientation read file.</br> 
+2. **cutadapt** will trim the <span style="color:orange">**3'**</span> and <span style="color:lightseagreen">**5'**</span>adapters from either end of your reads</br>
+3. **fastq_quality_filter** will filter reads for 

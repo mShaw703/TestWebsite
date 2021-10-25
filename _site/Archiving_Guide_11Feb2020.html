@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Maggie Shaw (email: shawma@upenn.edu)" />
+
+
+<title>Guide: Archiving Nat Core Data</title>
+
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">My Website</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="bioinformatics_basics.html">Bioinformatics Basics</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Pipeline Walkthrough's
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="WT_BarcodeLibrary_MS08Oct2021.html">Walkthrough: Library/Barcode Projects</a>
+    </li>
+    <li>
+      <a href="BarcodeBatchforLibraryProjects_MS16July2021.html">How to Run: Library/Barcode Projects</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Guides
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Archiving_Guide_26Mar2020.html">How to: Archive</a>
+    </li>
+    <li>
+      <a href="ConcatenatingGuide.html">How to: Concatenate</a>
+    </li>
+    <li>
+      <a href="CellRanger_Count.html">CellRanger - Count</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Guide: Archiving Nat Core Data</h1>
+<h4 class="author">Maggie Shaw (email: <a href="mailto:shawma@upenn.edu" class="email">shawma@upenn.edu</a>)</h4>
+<h4 class="date">Last update: 2/14/2020</h4>
+
+</div>
+
+
+<hr />
+<div id="paths-to-important-directories" class="section level2">
+<h2><span style="color:Teal"><strong>Paths to Important Directories</strong></span></h2>
+<ul>
+<li><span style="color:lightseagreen"><strong>Archiving Scripts:</strong></span> <strong>/project/gtplab/Archiving/Scripts</strong></li>
+<li><span style="color:lightseagreen"><strong>Rsync Reports, Logs, and InterOp Data:</strong></span> <strong>/project/gtplab/Archiving/</strong><span style="color:gray"><strong><em>sequencer</em></strong></span><strong>/</strong><span style="color:gray"><strong><em>YYMonth</em></strong></span></li>
+<li><span style="color:lightseagreen"><strong>Data to Archive:</strong></span> <strong>/project/gtplab_testxfer/gtp01/</strong><span style="color:gray"><strong><em>sequencer</em></strong></span></li>
+<li><span style="color:lightseagreen"><strong>Archived Data:</strong></span> <strong>/archivetape/gtplab/</strong><span style="color:gray"><strong><em>sequencer</em></strong></span><strong>/</strong><span style="color:gray"><strong><em>YYMonth</em></strong></span></li>
+</ul>
+<p><span style="color:maroon"><strong>NOTE: To acces </strong></span><span style="color:lightseagreen"><strong>Archived Data</strong></span><span style="color:maroon"> <strong>you must access the HPC via <span class="citation">@mercury.pmacs.upenn.edu</span> NOT consign. Exit the HPC or open a new command prompt and log into HPC with:</strong> </span></p>
+<pre class="bash"><code>ssh _username_@mercury.pmacs.upenn.edu</code></pre>
+</div>
+<div id="how-to-archive-from-the-hpc" class="section level2">
+<h2><span style="color:Teal"><strong>How to Archive from the HPC</strong> </span></h2>
+<p><strong>Remember to use <code>cd</code> followed by your path to navigate into important directories</strong></p>
+<p>Log onto your HPC account and navigate to a <span style="color:lightseagreen"><strong>Data to Archive</strong></span> location, selecting one of the three available sequencers; <strong>M04119</strong>, <strong>M05589</strong>, or <strong>NB501320</strong>. Use <code>ls</code> to see what is available to archive for the selected sequencer.</p>
+<p>Once you’ve selected your sequncer, year, and month to archive. Navigate to the location of the <span style="color:lightseagreen"><strong>Archiving Scripts</strong></span> on the HPC. There are three scipts in this directory;</p>
+<ul>
+<li><strong>NatCore_archive_wrapper.sh</strong></li>
+<li><strong>NatCore_archive_data_GTP.sh</strong></li>
+<li><strong>ORIGINAL_archive_data_put_GTP.sh</strong></li>
+</ul>
+<p>The <strong>wrapper script</strong> will use the other <strong>NatCore_archive</strong> script to call data. The <strong>ORIGINAL</strong> script is not used for general archiving but is also stored here for archiving data outside of the 3 sequencers.</p>
+<p><span style="color:maroon"><strong>NOTE:</strong></span> If someone requests to archive data outside of the 3 regular sequencers OR the gtp_testxfer directory, this guide will not work. Please email me for any special requests.</p>
+<p>In the <span style="color:lightseagreen"><strong>Archiving Scripts</strong></span> directory you can use the command ..</p>
+<pre class="bash"><code>sh NatCore_archive_wrapper.sh</code></pre>
+<p>And the following prompt will come up giving instructions and an example for archiving.</p>
+<pre class="bash"><code>Usage:   NatCore_archive_wrapper.sh -m [MONTH] -y [YEAR] -s [SEQUENCER]
+Options:
+   -m    Abbreviated or full text version for month of archive data, ie &#39;March&#39; or &#39;Mar&#39;
+   -y    Short numeric format for year of year for data archive, ie. &#39;19&#39;
+   -s    Sequencer ID, as listed in gtplab_testxfer
+Example: NatCore_archive_wrapper.sh -m Mar -y 19 -s NB501320</code></pre>
+<p>To run <strong>Febrary 2019</strong> for <strong>M04119</strong> please enter ..</p>
+<pre class="bash"><code>sh NatCore_archive_wrapper.sh -m February -y 19 -s M04119</code></pre>
+<p><strong>This is the only command needed to archive.</strong> Once you have entered this command, you can monitor your jobs progress, check that the data is properly archived, and then delete data from the sequencer and the gtplab_testxfer</p>
+</div>
+<div id="monitoring-the-archive-process" class="section level2">
+<h2><span style="color:Teal"><strong>Monitoring the Archive Process</strong></span></h2>
+<p>The first part of the script will condense data together into a single file. The condensing portion of the archiving process will take the longest. There are a few ways to monitor archving progress;</p>
+<p><strong>1. Use the command <code>bjobs</code> or <code>bjobs -l</code>(for more detail), to see that your job has submitted</strong></p>
+<p><strong>2. Go to the location of your <span style="color:lightseagreen"><strong>Data to Archive</strong></span>. Once in this location, you should see a new file ending in <em>.tar.gz</em> and beginning with your 2 digit selected year, followed by the month and sequencer ID</strong></p>
+<p>If you use the command <strong><code>ll</code></strong> a few times in a row, you should see the new file <strong><em>YYMonth</em>_<em>SequencerID</em>.archive.tar.gz</strong> growing in size.</p>
+<p><strong>Contents of your new file:</strong> The new file is the compressed version of all the files in this directory starting with the 4 number format of your selected Year and Month. So for Febuary 2019 you would see <strong>19Febuary_M04119.archive.tar.gz</strong> and compressed into this single file would be all the folders in this directory starting with <strong>1902</strong>.</p>
+<p><strong>3. Once your data is compressed you can go to the location of your </strong><span style="color:lightseagreen"><strong>Rsync Reports, Logs, and InterOp Data</strong></span> <strong>and you should see a few files in your new directory</strong> <span style="color:gray"><strong>(/project/gtplab/Archiving/<em>SEQUENCER/YYMONTH</em>)</strong></span></p>
+<hr />
+<p><strong>Contents of </strong><span style="color:teal"><strong>Rsync Reports, Logs, and InterOp Data</strong></span><strong>:</strong> <span style="color:gray"><strong>These files are generated as the code runs so not all files and directories will be available as soon as you submit your job.</strong></span></p>
+<ul>
+<li><span style="color:lightseagreen"><strong><em>YYMONTH_SEQUENCER</em>.manifest</strong></span>: A full report of every file and directory included in the data that is archived. <em>NOTE 14Feb2020: This could be used in the future to seach for data you need to pull off the archive tape</em></li>
+<li><span style="color:lightseagreen"><strong><em>YYMONTH_SEQUENCER</em>.tar.gz.md5sum</strong></span>: md5sum for your <span style="color:gray"><strong><em>YYMonth</em>_<em>SequencerID</em>.archive.tar.gz</strong></span> file. This is useful to check that a complete file is synched to the archive tape.</li>
+<li><span style="color:lightseagreen"><strong>Directory: Inter_Op_Files</strong></span>: Storage space for InterOp files for each run stored in your <span style="color:gray"><strong><em>YYMonth</em>_<em>SequencerID</em>.archive.tar.gz</strong></span></li>
+<li><span style="color:lightseagreen"><strong>Directory: log</strong></span>: Contains standard output files for your job submission.</li>
+<li><span style="color:lightseagreen"><strong>rsync_include_files_list_<em>TIMESTAMP</em>.txt</strong></span>: List of the file/s to be synched to the archive tape. This is a list of the compressed files to be synched, not the files in the compressed file.</li>
+<li><span style="color:lightseagreen"><strong>rsync_xfer_<em>TIMESTAMP</em>.log</strong></span>: Report from the rsync to the archive tape.</li>
+</ul>
+<p><span style="color:gray"><strong>In some cases the compressed file will be too big to archive at once, the script handles this by splitting the compressed files into parts, the name of the compressed file willl reflect which part it is and each part will be listed in the included files text file.</strong></span></p>
+<hr />
+<p><strong>4. View your syched data on the</strong> <span style="color:lightseagreen"><strong>Archive</strong></span> <strong>Once your job is complete you should be able to go to the arhive tape and see your compressed file in the correct SEQUENCER directory</strong></p>
+</div>
+<div id="logging-your-archive-and-deleting-data" class="section level2">
+<h2><span style="color:Teal"><strong>Logging your Archive and Deleting Data</strong></span></h2>
+<div id="coming-soon" class="section level4">
+<h4>COMING SOON</h4>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
